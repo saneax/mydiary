@@ -1,0 +1,6 @@
+GEMINI.md
+.venv
+mydiary.db
+.coverage
+.ruff_cache
+.tox 

@@ -1,0 +1,1 @@
+# mydiary package initialization

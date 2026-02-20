@@ -1,0 +1,2 @@
+[console_scripts]
+mydiary = mydiary.cli:main
