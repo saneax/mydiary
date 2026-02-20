@@ -1,0 +1,16 @@
+- job:
+    name: 'mydiary-multibranch'
+    project-type: multibranch
+    description: 'Multi-branch pipeline for mydiary project'
+    scm:
+      - github:
+          repo-owner: 'saneax'
+          repo: 'mydiary'
+          credentials-id: 'github-token'
+          discover-pr-origin: current
+          discover-pr-forks-strategy: current
+          branch-discovery: all
+    script-path: 'Jenkinsfile'
+    orphaned-item-strategy:
+      discard-days: 7
+      num-to-keep: 10
