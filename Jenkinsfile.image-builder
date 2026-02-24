@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build CI Image') {
+            agent {
+                docker {
+                    image 'gcr.io/kaniko-project/executor:debug'
+                    reuseNode true
+                    args '--entrypoint=""'
+                }
+            }
+            environment {
+                QUAY_CREDS = credentials('pi-sanjayu-quay-login')
+            }
+            steps {
+                script {
+                    // Create Kaniko config for Quay.io authentication
+                    sh """
+                    mkdir -p /kaniko/.docker
+                    AUTH=\$(echo -n "\${QUAY_CREDS_USR}:\${QUAY_CREDS_PSW}" | base64 | tr -d '
+')
+                    echo "{"auths":{"quay.io":{"auth":"\${AUTH}"}}}" > /kaniko/.docker/config.json
+                    
+                    /kaniko/executor 
+                        --context "${WORKSPACE}" 
+                        --dockerfile "${WORKSPACE}/Dockerfile" 
+                        --destination "quay.io/saneax/mydiary-ci:latest"
+                    """
+                }
+            }
+        }
+    }
+}
