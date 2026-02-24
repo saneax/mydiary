@@ -1,0 +1,34 @@
+- job:
+    name: 'mydiary-image-builder'
+    description: 'Builds and pushes the CI image to quay.io'
+    project-type: freestyle
+    scm:
+      - git:
+          url: 'https://github.com/saneax/mydiary.git'
+          branches:
+            - 'main'
+          credentials-id: 'github-token'
+    triggers:
+      - pollscm:
+          cron: 'H/15 * * * *'
+    builders:
+      - shell: |
+          IMAGE_NAME="quay.io/saneax/mydiary-ci"
+          TAG="latest"
+          
+          echo "Logging into quay.io..."
+          podman login -u "${QUAY_USER}" -p "${QUAY_TOKEN}" quay.io
+          
+          echo "Building image..."
+          podman build -t ${IMAGE_NAME}:${TAG} .
+          
+          echo "Pushing image..."
+          podman push ${IMAGE_NAME}:${TAG}
+    wrappers:
+      - credentials-binding:
+          - username-password-password:
+              variable: QUAY_TOKEN
+              credential-id: pi-sanjayu-quay-login
+          - username-password-username:
+              variable: QUAY_USER
+              credential-id: pi-sanjayu-quay-login

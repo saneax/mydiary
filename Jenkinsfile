@@ -1,13 +1,12 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'quay.io/saneax/mydiary-ci:latest'
+            reuseNode true
+        }
+    }
 
     stages {
-        stage('Install Dependencies') {
-            steps {
-                sh 'python3 -m pip install --upgrade pip'
-                sh 'python3 -m pip install tox'
-            }
-        }
         stage('Lint') {
             steps {
                 sh 'tox -e lint'
