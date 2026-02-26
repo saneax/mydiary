@@ -6,7 +6,8 @@
       - github:
           repo-owner: 'saneax'
           repo: 'mydiary'
-          credentials-id: 'github-token'
+          credentials-id: 'saneax gthub key'
+          ssh-checkout: true
           discover-pr-origin: current
           discover-pr-forks-strategy: current
           branch-discovery: all
